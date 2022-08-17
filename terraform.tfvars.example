@@ -1,0 +1,7 @@
+vsphere_server = ""
+vsphere_user = "administrator@vsphere.local"
+vsphere_password = "@CRneto04"
+datacenter = "Datacenter-LAB.VSPHERE.LOCAL"
+cluster = "Cluster-LAB.VSPHERE.LOCAL"
+datastore = "LOCAL-HOST01"
+network_name = "VM Network "
