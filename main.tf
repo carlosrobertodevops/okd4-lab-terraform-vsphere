@@ -26,18 +26,18 @@ data "vsphere_network" "network" {
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
-data "vsphere_virtual_machine" "vm" {
+data "vsphere_virtual_machine" "fedora" {
   name          = "/${var.datacenter}/vm/${var.fedora_name}"
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
-resource "vsphere_virtual_machine" "okd4" {
-  name             = "okd4-terraform"
+resource "vsphere_virtual_machine" "okd4-lab-local" {
+  name             = var.fedora_name
   resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
   datastore_id     = data.vsphere_datastore.datastore.id
 
-  num_cpus = 2
-  memory   = 2048
+  num_cpus = var.num_cpus
+  memory   = var.memory
 
   network_interface {
     network_id = data.vsphere_network.network.id
@@ -47,12 +47,12 @@ resource "vsphere_virtual_machine" "okd4" {
   wait_for_guest_ip_timeout  = -1
 
   disk {
-    label            = "disk0"
+    label            = "disk-sda3"
     thin_provisioned = true
-    size             = 32
+    size             = var.disk_size
   }
 
-  guest_id = "fedora64Guest"
+  guest_id = var.guest_id
 
   clone {
     template_uuid = data.vsphere_virtual_machine.fedora.id
@@ -60,5 +60,5 @@ resource "vsphere_virtual_machine" "okd4" {
 }
 
 output "vm_ip" {
-  value = vsphere_virtual_machine.okd4.guest_ip_addresses
+  value = vsphere_virtual_machine.okd4-lab-local.guest_ip_addresses
 }

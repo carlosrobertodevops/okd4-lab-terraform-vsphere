@@ -4,31 +4,34 @@ source "vsphere-iso" "this" {
   password          = var.vsphere_password
   datacenter        = var.datacenter
   cluster           = var.cluster
+
   insecure_connection  = true
 
-  vm_name = "okd4-bootstrap"
-  guest_os_type = "fedora64Guest"
+  vm_name = var.vm_name
+  
+  guest_os_type = var.guest_os_type
 
-  ssh_username = "root"
-  ssh_password = "@crneto04"
+  ssh_username = var.ssh_username
+  ssh_password = var.ssh_password
 
-  CPUs =             4
-  RAM =              1024
+  CPUs =             var.num_cpus
+  RAM =              var.memory
   RAM_reserve_all = true
 
-  disk_controller_type =  ["pvscsi"]
+  disk_controller_type =  [var.disk_controller_type]
+
   datastore = var.datastore
+
   storage {
-    disk_size =        100000
+    disk_size = var.disk_size
     disk_thin_provisioned = true
   }
 
-  iso_paths = ["[LOCAL-HOST01] iso/fedora-coreos-32.20200715.3.0-live.x86_64"]
-  // iso_checksum = "sha256:b23488689e16cad7a269eb2d3a3bf725d3457ee6b0868e00c8762d3816e25848"
+  iso_paths = [var.custom_iso_path]
 
   network_adapters {
     network =  var.network_name
-    network_card = "vmxnet0"
+    network_card = var.network_card
   }
 
   floppy_files = [
